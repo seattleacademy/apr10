@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+    <title>mpu6050</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    $(document).ready(function() {
+        var socket = io('/');
+        socket.emit('readSensor');
+        socket.on('sensordata', function(data) {
+            //console.log('sensordata', data);
+            objString = JSON.stringify(data);
+            $("#content").text(objString);
+            socket.emit('readSensor');
+        });
+    });
+    </script>
+</head>
+<body>
+    <div id="content">Hello World</div>
+</body>
+</html>
