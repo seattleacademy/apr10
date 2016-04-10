@@ -14,6 +14,7 @@
             //console.log('sensordata', data);
             //objString = JSON.stringify(data);
            //$("#content").text(objString);
+            $("#counter").text(data.counter.toFixed(0));
             $("#gyrox").text(data.gyro.x.toFixed(2));
             $("#gyroy").text(data.gyro.y.toFixed(2));
             $("#gyroz").text(data.gyro.z.toFixed(2));
@@ -43,10 +44,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>gyro.x</td>
-                    <td id="gyrox">..</td>
+                    <td>counter</td>
+                    <td id="counter">..</td>
                 </tr>
                 <tr>
+                    <td>gyro.x</td>
+                    <td id="gyrox">..</td>
+                </tr>                <tr>
                     <td>gyro.y</td>
                     <td id="gyroy">..</td>
                 </tr>

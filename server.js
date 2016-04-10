@@ -11,8 +11,8 @@ var i2c1 = i2c.openSync(1);
 var sensor = new MPU6050(i2c1, address);
 
 var data = sensor.readSync();
-console.log(data);
-
+//console.log(data);
+var counter = 0;
 var pageName = "index.html";
 
 //if port not given use this as default
@@ -41,6 +41,8 @@ function onConnect(socket) {
     socket.on('readSensor', function(data) {
         //console.log(data);
         data = sensor.readSync();
+        counter++;
+        data.counter = counter;
         io.sockets.emit('sensordata', data);
     });
 }
