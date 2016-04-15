@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Temp Chart</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script language="javascript" type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.min.js"></script>
+        <script>
+            var information = io.connect('/');
+            var socket = io('/');
+           // console.log(socket);
+           
+            information.on('connect', function () {
+
+                var tempdata = [];
+                for(var i=0;i<50;i++){
+                    tempdata.push(25);
+                }
+                var samples=[]
+                // for (var i = 0; i < netdata.length; ++i) {
+                //     samples.push([i, tempdata[i]])
+                // }
+                var plot = $.plot("#sensorTemp-data",[samples], {
+                    series: {
+                        shadowSize: 0	// Drawing is faster without shadows
+                    },
+                    yaxis: {
+                        min:20,
+                        max: 30
+                    },
+                    xaxis: {
+                        show: true,
+                        min:0,
+                        max:50
+                    }
+                });
+                 //socket.emit('readSensor');
+                 function emitread(readSensor){
+                     socket.emit('readSensor');
+
+                 }
+                 setInterval(emitread,100);
+
+                socket.on('sensordata', function (data) {
+                       //console.log("sensordata:",data); 
+                    $("#sensorTemp").text(data.temp);
+
+                    tempdata.shift();
+                    tempdata.push(data.temp);
+                   // console.log(tempdata);
+                    samples=[];
+                    for (var i = 0; i < tempdata.length; ++i) {
+                        samples.push([i, tempdata[i]]);
+                    }
+                    //console.log(JSON.stringify(samples));
+                    plot.setData([samples]);
+                    plot.draw();
+                   
+
+                });
+            });
+        </script>
+
+    </head>
+    <body>
+        <<div class="container">
+            <h2>Sensor Temperature</h2>
+            <div >Temperature:  <span id="sensorTemp">...</span> Degrees</div>
+
+            <h2>Graph</h2>
+            <div >
+                <div >
+                    <div id="sensorTemp-data" style="width:540px;height:340px"></div>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>
